@@ -11,7 +11,7 @@ app.use(cors());
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  database: "mydb"
+  database: "mockInjection"
 });
 
 connection.connect();
