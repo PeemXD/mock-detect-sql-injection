@@ -1,0 +1,12 @@
+//! initiate DB
+DROP DATABASE IF EXISTS mockInjection;
+
+CREATE DATABASE IF NOT EXISTS mockInjection;
+
+USE mockInjection;
+CREATE TABLE users(
+	username varchar(255) NOT NULL,
+	password varchar(255) NOT NULL
+);
+INSERT INTO users 
+VALUES ('lnwza007', '123'), ('eiei123','123')
