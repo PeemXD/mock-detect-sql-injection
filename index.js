@@ -11,7 +11,8 @@ app.use(cors());
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  database: "mockInjection"
+  database: "mockInjection",
+  multipleStatements: true
 });
 
 connection.connect();
@@ -35,6 +36,43 @@ app.post("/login", (req, res) => {
       }
     }
   );
+});
+
+app.get("/service", (req, res) => {
+  const name = req.query?.name;
+  console.log(`SELECT * FROM service WHERE name = "${name}"`);
+
+  if (!name) {
+    connection.query(
+      `SELECT * FROM service`,
+      (err, results) => {
+        console.log(results);
+        if (err) {
+          res.status(500).send();
+        } else if (!results.length) {
+          res.status(401).send({ success: false });
+        } else {
+          res.status(200).send(results);
+        }
+      }
+    );
+  }else{
+    const sqll = `SELECT * FROM service WHERE name = "${name}"`
+    console.log(sqll);
+    connection.query(sqll
+      ,
+      (err, results) => {
+        console.log(results);
+        if (err) {
+          res.status(500).send();
+        } else if (!results.length) {
+          res.status(401).send({ success: false });
+        } else {
+          res.status(200).send(results);
+        }
+      }
+    );
+  }
 });
 
 app.listen(3000, () => {

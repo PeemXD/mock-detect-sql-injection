@@ -22,9 +22,7 @@ form.addEventListener("submit", async (event) => {
 
     login1().then((data2) => {
       if (data2.success) {
-        // Redirect to the dashboard
-        // window.location.href = "/dashboard";
-        alert("Successfully logged in!");
+        window.location.replace("show.html");
       } else {
         alert("Invalid email or password");
       }

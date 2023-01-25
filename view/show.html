@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Service Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+
+        }
+
+        td,th {
+            border: 2px solid #ccc;;
+            text-align: left;
+            padding: 8px;
+           
+        }
+        form {
+            display: flex;
+            align-items: center;   
+        }
+          
+        input[type="text"] {
+        width: 90%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        }
+        
+        button[type="submit"] {
+        width: 10%;
+        padding: 12px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: 2px solid #4CAF50;
+        border-radius: 4px;
+        cursor: pointer;
+        }
+        
+        button[type="submit"]:hover {
+        background-color: #45a049;
+        }
+    </style>
+  </head>
+  <body>
+    <form onsubmit="getSpecificService()">
+        <input type="text" id="searchInput" placeholder="Search...">
+        <button type="submit">Search</button>
+    </form>
+    <table id="servicesTable">
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+        </tr>
+    </table>  
+    <script type="text/javascript" charset="utf-8">
+        fetch('http://localhost:3000/service')
+            .then(function (response) {
+                return response.json();
+            }).then(function (apiJsonData) {
+                console.log(apiJsonData);
+                renderDataInTheTable(apiJsonData);
+            })
+
+        function renderDataInTheTable(todos) {
+            const mytable = document.getElementById("servicesTable");
+            todos.forEach(todo => {
+                let newRow = document.createElement("tr");
+                Object.values(todo).forEach((value) => {
+                    let cell = document.createElement("td");
+                    cell.innerText = value;
+                    newRow.appendChild(cell);
+                })
+                mytable.appendChild(newRow);
+            });
+        }
+
+        function getSpecificService() {
+            event.preventDefault(); // prevent form submission
+            var searchInput = document.getElementById("searchInput").value;
+            //call API with the search input
+            //example:
+            fetch("http://localhost:3000/service?name="+searchInput, {
+                method: "GET",
+                mode: 'cors',
+                headers: { 'Content-Type': 'application/json' },
+              })
+              .then(response => response.json())
+              .then(apiJsonData => {
+                console.log(apiJsonData);
+                deleteAllTableData()
+                renderDataInTheTable(apiJsonData);
+                
+            })
+          }
+        
+        function deleteAllTableData() {
+            var table = document.getElementById("servicesTable");
+            var rowCount = table.rows.length;
+            for (var i = 0; i < rowCount; i++) {
+            table.deleteRow(0);
+            }
+        }
+          
+    </script>
+</body>
+</html>
+
