@@ -42,11 +42,28 @@
         button[type="submit"]:hover {
         background-color: #45a049;
         }
+
+        .upload-form {
+            width: 400px;
+            margin: 50px auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px #ccc;
+          }
     </style>
   </head>
   <body>
+    <div class="upload-form">
+        <form>
+            <input type="file" id="myFile" name="filename">
+            <input type="submit">
+        </form>
+    </div>
+    
     <form onsubmit="getSpecificService()">
-        <input type="text" id="searchInput" placeholder="Search...">
+        <!-- <input type="text" id="searchInput" placeholder="Search...">  -->
+        <input type="text" id="searchInput" placeholder="Search..." pattern="[ก-๏a-zA-Z\d0-9]+"> 
         <button type="submit">Search</button>
     </form>
     <table id="servicesTable">
