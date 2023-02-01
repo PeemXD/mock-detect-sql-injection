@@ -35,7 +35,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "mockInjection",
-  multipleStatements: true
+  // multipleStatements: true
 });
 
 connection.connect();
@@ -73,6 +73,7 @@ app.get("/service", (req, res) => {
         // console.log(results);
         if (err) {
           res.status(500).send();
+          // res.status(500).send(err); //! error base
         } else if (!results.length) {
           res.status(401).send({ success: false });
         } else {
@@ -96,7 +97,7 @@ app.get("/service", (req, res) => {
     }
     //!
 
-    const sqll = `SELECT * FROM service WHERE name = "${name}"`
+    const sqll = `SELECT name, price FROM service WHERE name = "${name}"`
     // console.log(sqll);
     connection.query(sqll
       ,
