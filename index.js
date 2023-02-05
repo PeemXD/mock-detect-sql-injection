@@ -2,28 +2,33 @@ const express = require("express");
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-var process = require('process')
+var process = require("process");
 
 function measureUsage(req, res, next) {
   const start = process.hrtime();
   const memoryStart = process.memoryUsage();
 
-  res.on('finish', () => {
+  res.on("finish", () => {
     const end = process.hrtime(start);
     const elapsedTime = end[0] * 1000 + end[1] / 1000000;
 
     const memoryEnd = process.memoryUsage();
-    const memoryUsage = (memoryEnd.rss - memoryStart.rss);
+    const memoryUsage = memoryEnd.rss - memoryStart.rss;
 
     if (req.method != "OPTIONS") {
-      console.log(`\nTime taken for ${req.method} ${req.url}: ${elapsedTime}ms`);
-      console.log(`The script uses approximately ${Math.round(memoryUsage * 100000) / 100000} B`);
+      console.log(
+        `\nTime taken for ${req.method} ${req.url}: ${elapsedTime}ms`
+      );
+      console.log(
+        `The script uses approximately ${
+          Math.round(memoryUsage * 100000) / 100000
+        } B`
+      );
     }
   });
 
   next();
 }
-
 
 const app = express();
 app.use(measureUsage);
@@ -67,22 +72,18 @@ app.get("/service", (req, res) => {
   // console.log(`SELECT * FROM service WHERE name = "${name}"`);
 
   if (!name) {
-    connection.query(
-      `SELECT * FROM service`,
-      (err, results) => {
-        // console.log(results);
-        if (err) {
-          res.status(500).send();
-          // res.status(500).send(err); //! error base
-        } else if (!results.length) {
-          res.status(401).send({ success: false });
-        } else {
-          res.status(200).send(results);
-        }
+    connection.query(`SELECT * FROM service`, (err, results) => {
+      // console.log(results);
+      if (err) {
+        res.status(500).send();
+        // res.status(500).send(err); //! error base
+      } else if (!results.length) {
+        res.status(401).send({ success: false });
+      } else {
+        res.status(200).send(results);
       }
-    );
-  }else{
-
+    });
+  } else {
     //!
     const pattern = /^[ก-๏a-zA-Z\d0-9]+$/;
     // console.log(name);
@@ -90,28 +91,25 @@ app.get("/service", (req, res) => {
     // console.log(pass);
     if (!pass) {
       res.status(200).send({
-        status: 'error',
-        message: 'Input string does not match the pattern'
+        status: "error",
+        message: "Input string does not match the pattern",
       });
-      return ;
+      return;
     }
     //!
 
-    const sqll = `SELECT name, price FROM service WHERE name = "${name}"`
+    const sqll = `SELECT name, price FROM service WHERE name = "${name}"`;
     // console.log(sqll);
-    connection.query(sqll
-      ,
-      (err, results) => {
-        // console.log(results);
-        if (err) {
-          res.status(500).send();
-        } else if (!results.length) {
-          res.status(401).send({ success: false });
-        } else {
-          res.status(200).send(results);
-        }
+    connection.query(sqll, (err, results) => {
+      // console.log(results);
+      if (err) {
+        res.status(500).send();
+      } else if (!results.length) {
+        res.status(401).send({ success: false });
+      } else {
+        res.status(200).send(results);
       }
-    );
+    });
   }
 });
 
