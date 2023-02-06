@@ -45,6 +45,13 @@ CREATE TABLE customer(
 INSERT INTO customer
 VALUES ('C001', 'memo1', 'one1', 'E001@gmail.com', 0123456781);
 
+CREATE TABLE service(
+    name varchar(255) NOT NULL PRIMARY KEY,
+    price int(11) UNSIGNED NOT NULL);
+
+INSERT INTO service
+VALUES ('A', 100), ('B',200), ('C',300), ('D',400);
+
 /////////////////////////////////////////////////////
 
 "' OR 1=1 -- "
