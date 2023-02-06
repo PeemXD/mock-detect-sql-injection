@@ -34,6 +34,17 @@ VALUES ('E001', 'Mr.', 'bobo1', 'two1', 'baba1', 'E001@gmail.com', 0123456781 , 
        ('E004', 'Mr.', 'bobo4', 'two4', 'baba4', 'E004@gmail.com', 0123456784 , 'companyA, companyB', 'XAU', '123 r.xxxxx 50200', 1530302340924, '123 r.xxxxx 54000'), 
        ('E005', 'Mr.', 'bobo5', 'two5', 'baba5', 'E005@gmail.com', 0123456785 , 'companyA, companyB', 'XAU', '123 r.xxxxx 50200', 1530302340925, '123 r.xxxxx 54000');
 
+CREATE TABLE customer(
+	customer_id varchar(255) NOT NULL PRIMARY KEY,
+    fname varchar(255) NULL,
+    lname varchar(255) NULL,
+    email varchar(255) NULL,
+    tel char(10) NOT NULL
+);
+
+INSERT INTO customer
+VALUES ('C001', 'memo1', 'one1', 'E001@gmail.com', 0123456781);
+
 /////////////////////////////////////////////////////
 
 "' OR 1=1 -- "
