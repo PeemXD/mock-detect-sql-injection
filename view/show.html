@@ -66,13 +66,20 @@
       <button type="submit">Search</button>
     </form>
     <table id="servicesTable">
-      <tr>
-        <th>Name</th>
-        <th>Price</th>
-      </tr>
+      <thead></thead>
+        <tr>
+          <th>employee_id</th>
+          <th>prefixname</th>
+          <th>fname</th>
+          <th>lname</th>
+          <th>nickname</th>
+          <th>email</th>
+          <th>tel</th>
+        </tr>
+      </thead>
     </table>
     <script type="text/javascript" charset="utf-8">
-      fetch("http://localhost:3000/service")
+      fetch("http://localhost:3000/employee")
         .then(function (response) {
           return response.json();
         })
@@ -99,7 +106,7 @@
         var searchInput = document.getElementById("searchInput").value;
         //call API with the search input
         //example:
-        fetch("http://localhost:3000/service?name=" + searchInput, {
+        fetch("http://localhost:3000/employee?id=" + searchInput, {
           method: "GET",
           mode: "cors",
           headers: { "Content-Type": "application/json" },

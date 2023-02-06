@@ -67,27 +67,30 @@ app.post("/login", (req, res) => {
   );
 });
 
-app.get("/service", (req, res) => {
-  const name = req.query?.name;
+app.get("/employee", (req, res) => {
+  const id = req.query?.id;
   // console.log(`SELECT * FROM service WHERE name = "${name}"`);
 
-  if (!name) {
-    connection.query(`SELECT * FROM service`, (err, results) => {
-      // console.log(results);
-      if (err) {
-        res.status(500).send();
-        // res.status(500).send(err); //! error base
-      } else if (!results.length) {
-        res.status(401).send({ success: false });
-      } else {
-        res.status(200).send(results);
+  if (!id) {
+    connection.query(
+      `SELECT employee_id, prefixname, fname, lname, nickname, email, tel FROM employee`,
+      (err, results) => {
+        // console.log(results);
+        if (err) {
+          // res.status(500).send();
+          res.status(500).send(err); //! error base
+        } else if (!results.length) {
+          res.status(401).send({ success: false });
+        } else {
+          res.status(200).send(results);
+        }
       }
-    });
+    );
   } else {
     //!
     const pattern = /^[ก-๏a-zA-Z\d0-9]+$/;
     // console.log(name);
-    const pass = pattern.test(name);
+    const pass = pattern.test(id);
     // console.log(pass);
     if (!pass) {
       res.status(200).send({
@@ -98,7 +101,7 @@ app.get("/service", (req, res) => {
     }
     //!
 
-    const sqll = `SELECT name, price FROM service WHERE name = "${name}"`;
+    const sqll = `SELECT employee_id, prefixname, fname, lname, nickname, email, tel FROM employee WHERE employee_id = "${id}"`;
     // console.log(sqll);
     connection.query(sqll, (err, results) => {
       // console.log(results);
