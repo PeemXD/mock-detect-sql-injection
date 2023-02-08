@@ -43,7 +43,8 @@ CREATE TABLE customer(
 );
 
 INSERT INTO customer
-VALUES ('C001', 'memo1', 'one1', 'E001@gmail.com', 0123456781);
+VALUES ('C001', 'memo1', 'one1', 'E001@gmail.com', 0123456781)
+        ('C002', 'memo2', 'one2', 'E002@gmail.com', 0123456782);
 
 CREATE TABLE service(
     name varchar(255) NOT NULL PRIMARY KEY,
