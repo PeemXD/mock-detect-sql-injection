@@ -47,14 +47,14 @@ function haveBlackListWord(input) {
   ];
   // i -> case-insensitive -> not care upper/lower case
   // blacklist.join("|") --> 'badword1|badword2|badword3'
-  // return true if input docs not caontain Black List Word
   const regex = new RegExp(`\\b(${blacklist.join("|")})\\b`, "i");
-  return !regex.test(input);
+  return regex.test(input);
+  // return false if input docs not caontain Black List Word
 }
 
 function validPattern(input) {
   const pattern = /^[ก-๏a-zA-Z\d0-9]+$/;
-  return !pattern.test(id);
+  return !pattern.test(input);
 }
 
 const app = express();
@@ -123,6 +123,7 @@ app.get("/employee", (req, res) => {
       }
     );
   } else {
+    console.log(haveBlackListWord(id));
     if (haveBlackListWord(id) || validPattern(id)) {
       res.status(200).send({
         status: "error",
