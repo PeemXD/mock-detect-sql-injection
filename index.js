@@ -30,6 +30,33 @@ function measureUsage(req, res, next) {
   next();
 }
 
+function haveBlackListWord(input) {
+  const blacklist = [
+    "UNION",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "SHOW",
+    "users",
+    "customer",
+    "work_background",
+    "graduation_certificate",
+    "address",
+    "id_card",
+    "house_registration",
+  ];
+  // i -> case-insensitive -> not care upper/lower case
+  // blacklist.join("|") --> 'badword1|badword2|badword3'
+  const regex = new RegExp(`\\b(${blacklist.join("|")})\\b`, "i");
+  return regex.test(input);
+  // return false if input docs not caontain Black List Word
+}
+
+function validPattern(input) {
+  const pattern = /^[ก-๏a-zA-Z\d0-9]+$/;
+  return !pattern.test(input);
+}
+
 const app = express();
 app.use(measureUsage);
 app.use(bodyParser.json());
@@ -50,12 +77,22 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  // console.log(req.body.data.username);
+  if (
+    haveBlackListWord(req.body.data.username) ||
+    haveBlackListWord(req.body.data.password) ||
+    validPattern(req.body.data.username) ||
+    validPattern(req.body.data.password)
+  ) {
+    res.status(200).send({
+      status: "error",
+      message: "Input string does not match the pattern",
+    });
+    return;
+  }
 
   connection.query(
     `SELECT * FROM users WHERE username = '${req.body.data.username}' AND password = '${req.body.data.password}'`,
     (err, results) => {
-      // console.log(results);
       if (err) {
         res.status(500).send();
       } else if (!results.length) {
@@ -69,7 +106,6 @@ app.post("/login", (req, res) => {
 
 app.get("/employee", (req, res) => {
   const id = req.query?.id;
-  // console.log(`SELECT * FROM service WHERE name = "${name}"`);
 
   if (!id) {
     connection.query(
@@ -77,8 +113,8 @@ app.get("/employee", (req, res) => {
       (err, results) => {
         // console.log(results);
         if (err) {
-          // res.status(500).send();
-          res.status(500).send(err); //! error base
+          res.status(500).send();
+          // res.status(500).send(err); //! error base
         } else if (!results.length) {
           res.status(401).send({ success: false });
         } else {
@@ -87,19 +123,14 @@ app.get("/employee", (req, res) => {
       }
     );
   } else {
-    //!
-    const pattern = /^[ก-๏a-zA-Z\d0-9]+$/;
-    // console.log(name);
-    const pass = pattern.test(id);
-    // console.log(pass);
-    if (!pass) {
+    console.log(haveBlackListWord(id));
+    if (haveBlackListWord(id) || validPattern(id)) {
       res.status(200).send({
         status: "error",
         message: "Input string does not match the pattern",
       });
       return;
     }
-    //!
 
     const sqll = `SELECT employee_id, prefixname, fname, lname, nickname, email, tel FROM employee WHERE employee_id = "${id}"`;
     // console.log(sqll);
