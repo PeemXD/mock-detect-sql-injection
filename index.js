@@ -89,7 +89,9 @@ app.post("/login", (req, res) => {
   //   });
   //   return;
   // }
-
+  console.log(
+    `SELECT * FROM users WHERE username = '${req.body.data.username}' AND password = '${req.body.data.password}'`
+  );
   connection.query(
     `SELECT * FROM users WHERE username = '${req.body.data.username}' AND password = '${req.body.data.password}'`,
     (err, results) => {
