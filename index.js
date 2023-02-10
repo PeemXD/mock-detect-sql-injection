@@ -4,31 +4,31 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 var process = require("process");
 
-function measureUsage(req, res, next) {
-  const start = process.hrtime();
-  const memoryStart = process.memoryUsage();
+// function measureUsage(req, res, next) {
+//   const start = process.hrtime();
+//   const memoryStart = process.memoryUsage();
 
-  res.on("finish", () => {
-    const end = process.hrtime(start);
-    const elapsedTime = end[0] * 1000 + end[1] / 1000000;
+//   res.on("finish", () => {
+//     const end = process.hrtime(start);
+//     const elapsedTime = end[0] * 1000 + end[1] / 1000000;
 
-    const memoryEnd = process.memoryUsage();
-    const memoryUsage = memoryEnd.rss - memoryStart.rss;
+//     const memoryEnd = process.memoryUsage();
+//     const memoryUsage = memoryEnd.rss - memoryStart.rss;
 
-    if (req.method != "OPTIONS") {
-      console.log(
-        `\nTime taken for ${req.method} ${req.url}: ${elapsedTime}ms`
-      );
-      console.log(
-        `The script uses approximately ${
-          Math.round(memoryUsage * 100000) / 100000
-        } B`
-      );
-    }
-  });
+//     if (req.method != "OPTIONS") {
+//       console.log(
+//         `\nTime taken for ${req.method} ${req.url}: ${elapsedTime}ms`
+//       );
+//       console.log(
+//         `The script uses approximately ${
+//           Math.round(memoryUsage * 100000) / 100000
+//         } B`
+//       );
+//     }
+//   });
 
-  next();
-}
+//   next();
+// }
 
 function haveBlackListWord(input) {
   const blacklist = [
@@ -58,7 +58,7 @@ function validPattern(input) {
 }
 
 const app = express();
-app.use(measureUsage);
+// app.use(measureUsage);
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -67,7 +67,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "mockInjection",
-  // multipleStatements: true
+  multipleStatements: true,
 });
 
 connection.connect();
@@ -77,18 +77,18 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  if (
-    haveBlackListWord(req.body.data.username) ||
-    haveBlackListWord(req.body.data.password) ||
-    validPattern(req.body.data.username) ||
-    validPattern(req.body.data.password)
-  ) {
-    res.status(200).send({
-      status: "error",
-      message: "Input string does not match the pattern",
-    });
-    return;
-  }
+  // if (
+  //   haveBlackListWord(req.body.data.username) ||
+  //   haveBlackListWord(req.body.data.password) ||
+  //   validPattern(req.body.data.username) ||
+  //   validPattern(req.body.data.password)
+  // ) {
+  //   res.status(200).send({
+  //     status: "error",
+  //     message: "Input string does not match the pattern",
+  //   });
+  //   return;
+  // }
 
   connection.query(
     `SELECT * FROM users WHERE username = '${req.body.data.username}' AND password = '${req.body.data.password}'`,
@@ -113,8 +113,8 @@ app.get("/employee", (req, res) => {
       (err, results) => {
         // console.log(results);
         if (err) {
-          res.status(500).send();
-          // res.status(500).send(err); //! error base
+          // res.status(500).send();
+          res.status(500).send(err); //! error base
         } else if (!results.length) {
           res.status(401).send({ success: false });
         } else {
@@ -123,17 +123,16 @@ app.get("/employee", (req, res) => {
       }
     );
   } else {
-    console.log(haveBlackListWord(id));
-    if (haveBlackListWord(id) || validPattern(id)) {
-      res.status(200).send({
-        status: "error",
-        message: "Input string does not match the pattern",
-      });
-      return;
-    }
+    // if (haveBlackListWord(id) || validPattern(id)) {
+    //   res.status(200).send({
+    //     status: "error",
+    //     message: "Input string does not match the pattern",
+    //   });
+    //   return;
+    // }
 
     const sqll = `SELECT employee_id, prefixname, fname, lname, nickname, email, tel FROM employee WHERE employee_id = "${id}"`;
-    // console.log(sqll);
+    console.log(sqll);
     connection.query(sqll, (err, results) => {
       // console.log(results);
       if (err) {
