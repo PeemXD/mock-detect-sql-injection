@@ -30,20 +30,26 @@ var process = require("process");
 //   next();
 // }
 
-function haveBlackListWord(input) {
+async function haveBlackListWord(input) {
   const blacklist = [
     "UNION",
+    "SELECT",
+    "SLEEP",
     "INSERT",
     "UPDATE",
     "DELETE",
     "SHOW",
     "users",
+    "service",
     "customer",
     "work_background",
     "graduation_certificate",
     "address",
     "id_card",
     "house_registration",
+    "database",
+    "table",
+    "column",
   ];
   // i -> case-insensitive -> not care upper/lower case
   // blacklist.join("|") --> 'badword1|badword2|badword3'
@@ -52,7 +58,30 @@ function haveBlackListWord(input) {
   // return false if input docs not caontain Black List Word
 }
 
-function validPattern(input) {
+async function haveBlackListWordInFile(input) {
+  const blacklist = [
+    "UNION",
+    "SELECT",
+    "SLEEP",
+    "SHOW",
+    "users",
+    "service",
+    "customer",
+    "work_background",
+    "graduation_certificate",
+    "address",
+    "id_card",
+    "house_registration",
+    "database",
+    "table",
+    "column",
+  ];
+  const regex = new RegExp(`\\b(${blacklist.join("|")})\\b`, "i");
+  return regex.test(input);
+  // return false if input docs not caontain Black List Word
+}
+
+async function validPattern(input) {
   const pattern = /^[ก-๏a-zA-Z\d0-9]+$/;
   return !pattern.test(input);
 }
@@ -76,12 +105,12 @@ app.get("/", (req, res) => {
   res.send({ success: true });
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   // if (
-  //   haveBlackListWord(req.body.data.username) ||
-  //   haveBlackListWord(req.body.data.password) ||
-  //   validPattern(req.body.data.username) ||
-  //   validPattern(req.body.data.password)
+  //   await haveBlackListWord(req.body.data.username) ||
+  //   await haveBlackListWord(req.body.data.password) ||
+  //   await validPattern(req.body.data.username) ||
+  //   await validPattern(req.body.data.password)
   // ) {
   //   res.status(200).send({
   //     status: "error",
@@ -106,7 +135,7 @@ app.post("/login", (req, res) => {
   );
 });
 
-app.get("/employee", (req, res) => {
+app.get("/employee", async (req, res) => {
   const id = req.query?.id;
 
   if (!id) {
@@ -125,7 +154,7 @@ app.get("/employee", (req, res) => {
       }
     );
   } else {
-    // if (haveBlackListWord(id) || validPattern(id)) {
+    // if (await haveBlackListWord(id) || await validPattern(id)) {
     //   res.status(200).send({
     //     status: "error",
     //     message: "Input string does not match the pattern",
@@ -143,6 +172,31 @@ app.get("/employee", (req, res) => {
         res.status(401).send({ success: false });
       } else {
         res.status(200).send(results);
+      }
+    });
+  }
+});
+
+app.post("/employee/uploadFile", async (req, res) => {
+  data = req.body.fileText;
+  console.log(data);
+  if (await haveBlackListWordInFile(data)) {
+    res.status(200).send({
+      success: false,
+      message:
+        "In this page allow INSERT UPDATE DELETE for admin but only relate employee_id, prefixname, fname, lname, nickname, email, tel ",
+    });
+    console.log("injection!!");
+    return;
+  } else {
+    connection.query(data, (err, results) => {
+      // console.log(results);
+      if (err) {
+        res.status(500).send();
+      } else if (!results.length) {
+        res.status(401).send({ success: false });
+      } else {
+        res.status(200).send({ success: true });
       }
     });
   }
