@@ -54,6 +54,7 @@ async function haveBlackListWord(input) {
   // i -> case-insensitive -> not care upper/lower case
   // blacklist.join("|") --> 'badword1|badword2|badword3'
   const regex = new RegExp(`\\b(${blacklist.join("|")})\\b`, "i");
+
   return regex.test(input);
   // return false if input docs not caontain Black List Word
 }
@@ -106,6 +107,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
+  // const start = performance.now();
   // if (
   //   await haveBlackListWord(req.body.data.username) ||
   //   await haveBlackListWord(req.body.data.password) ||
@@ -118,6 +120,7 @@ app.post("/login", async (req, res) => {
   //   });
   //   return;
   // }
+  // const end = performance.now();
   console.log(
     `SELECT * FROM users WHERE username = '${req.body.data.username}' AND password = '${req.body.data.password}'`
   );
@@ -154,6 +157,7 @@ app.get("/employee", async (req, res) => {
       }
     );
   } else {
+    // const start = performance.now();
     // if (await haveBlackListWord(id) || await validPattern(id)) {
     //   res.status(200).send({
     //     status: "error",
@@ -161,6 +165,7 @@ app.get("/employee", async (req, res) => {
     //   });
     //   return;
     // }
+    // const end = performance.now();
 
     const sqll = `SELECT employee_id, prefixname, fname, lname, nickname, email, tel FROM employee WHERE employee_id = "${id}"`;
     console.log(sqll);
@@ -180,26 +185,28 @@ app.get("/employee", async (req, res) => {
 app.post("/employee/uploadFile", async (req, res) => {
   data = req.body.fileText;
   console.log(data);
-  if (await haveBlackListWordInFile(data)) {
-    res.status(200).send({
-      success: false,
-      message:
-        "In this page allow INSERT UPDATE DELETE for admin but only relate employee_id, prefixname, fname, lname, nickname, email, tel ",
-    });
-    console.log("injection!!");
-    return;
-  } else {
-    connection.query(data, (err, results) => {
-      // console.log(results);
-      if (err) {
-        res.status(500).send();
-      } else if (!results.length) {
-        res.status(401).send({ success: false });
-      } else {
-        res.status(200).send({ success: true });
-      }
-    });
-  }
+  // const start = performance.now();
+  // if (await haveBlackListWordInFile(data)) {
+  //   res.status(200).send({
+  //     success: false,
+  //     message:
+  //       "In this page allow INSERT UPDATE DELETE for admin but only relate employee_id, prefixname, fname, lname, nickname, email, tel ",
+  //   });
+  //   console.log("injection!!");
+  //   return;
+  // }
+  // const end = performance.now();
+
+  connection.query(data, (err, results) => {
+    // console.log(results);
+    if (err) {
+      res.status(500).send();
+    } else if (!results.length) {
+      res.status(401).send({ success: false });
+    } else {
+      res.status(200).send({ success: true });
+    }
+  });
 });
 
 app.listen(3000, () => {
