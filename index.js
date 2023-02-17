@@ -4,31 +4,20 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 var process = require("process");
 
-// function measureUsage(req, res, next) {
-//   const start = process.hrtime();
-//   const memoryStart = process.memoryUsage();
+const app = express();
+// app.use(measureUsage);
+app.use(bodyParser.json());
+app.use(cors());
 
-//   res.on("finish", () => {
-//     const end = process.hrtime(start);
-//     const elapsedTime = end[0] * 1000 + end[1] / 1000000;
+// Connect to MySQL
+const connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  database: "mockInjection",
+  multipleStatements: true,
+});
 
-//     const memoryEnd = process.memoryUsage();
-//     const memoryUsage = memoryEnd.rss - memoryStart.rss;
-
-//     if (req.method != "OPTIONS") {
-//       console.log(
-//         `\nTime taken for ${req.method} ${req.url}: ${elapsedTime}ms`
-//       );
-//       console.log(
-//         `The script uses approximately ${
-//           Math.round(memoryUsage * 100000) / 100000
-//         } B`
-//       );
-//     }
-//   });
-
-//   next();
-// }
+connection.connect();
 
 async function haveBlackListWord(input) {
   const blacklist = [
@@ -87,40 +76,11 @@ async function validPattern(input) {
   return !pattern.test(input);
 }
 
-const app = express();
-// app.use(measureUsage);
-app.use(bodyParser.json());
-app.use(cors());
-
-// Connect to MySQL
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  database: "mockInjection",
-  multipleStatements: true,
-});
-
-connection.connect();
-
 app.get("/", (req, res) => {
   res.send({ success: true });
 });
 
 app.post("/login", async (req, res) => {
-  // const start = performance.now();
-  // if (
-  //   await haveBlackListWord(req.body.data.username) ||
-  //   await haveBlackListWord(req.body.data.password) ||
-  //   await validPattern(req.body.data.username) ||
-  //   await validPattern(req.body.data.password)
-  // ) {
-  //   res.status(200).send({
-  //     status: "error",
-  //     message: "Input string does not match the pattern",
-  //   });
-  //   return;
-  // }
-  // const end = performance.now();
   console.log(
     `SELECT * FROM users WHERE username = '${req.body.data.username}' AND password = '${req.body.data.password}'`
   );
@@ -157,16 +117,6 @@ app.get("/employee", async (req, res) => {
       }
     );
   } else {
-    // const start = performance.now();
-    // if (await haveBlackListWord(id) || await validPattern(id)) {
-    //   res.status(200).send({
-    //     status: "error",
-    //     message: "Input string does not match the pattern",
-    //   });
-    //   return;
-    // }
-    // const end = performance.now();
-
     const sqll = `SELECT employee_id, prefixname, fname, lname, nickname, email, tel FROM employee WHERE employee_id = "${id}"`;
     console.log(sqll);
     connection.query(sqll, (err, results) => {
@@ -185,17 +135,6 @@ app.get("/employee", async (req, res) => {
 app.post("/employee/uploadFile", async (req, res) => {
   data = req.body.fileText;
   console.log(data);
-  // const start = performance.now();
-  // if (await haveBlackListWordInFile(data)) {
-  //   res.status(200).send({
-  //     success: false,
-  //     message:
-  //       "In this page allow INSERT UPDATE DELETE for admin but only relate employee_id, prefixname, fname, lname, nickname, email, tel ",
-  //   });
-  //   console.log("injection!!");
-  //   return;
-  // }
-  // const end = performance.now();
 
   connection.query(data, (err, results) => {
     // console.log(results);
