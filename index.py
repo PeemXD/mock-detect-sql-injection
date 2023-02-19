@@ -10,8 +10,10 @@ CORS(app)
 connection = mysql.connector.connect(
     host="localhost",
     user="root",
-    database="mockInjection",
+    database="mockinjection",
 )
+
+cursor = connection.cursor()
 
 
 def haveBlackListWord(input):
@@ -78,31 +80,35 @@ def login():
     data = request.json.get('data')
     username = data.get('username')
     password = data.get('password')
+    print(data)
+    print(username, password)
 
-    cursor = connection.cursor()
-    cursor.execute(
-        "SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
-    result = cursor.fetchone()
+    sql = f'SELECT * FROM users WHERE username = "{username}" AND password = "{password}"'
+    print(sql)
+    cursor.execute(sql)
+    result = cursor.fetchall()
 
     if not result:
-        return jsonify({'success': False}), 401
+        return jsonify({'success': False})
     else:
         return jsonify({'success': True})
 
 
-@app.route("/employee", methods=['GET'])
+@ app.route("/employee", methods=['GET'])
 def employee():
     id = request.args.get('id')
 
-    cursor = connection.cursor()
     if not id:
-        cursor.execute(
-            "SELECT employee_id, prefixname, fname, lname, nickname, email, tel FROM employee")
+        sql = f'SELECT employee_id, prefixname, fname, lname, nickname, email, tel FROM employee'
+        print(sql)
+        cursor.execute(sql)
         result = cursor.fetchall()
     else:
-        cursor.execute(
-            "SELECT employee_id, prefixname, fname, lname, nickname, email, tel FROM employee WHERE employee_id = %s", (id,))
-        result = cursor.fetchone()
+        sql = f'SELECT employee_id, prefixname, fname, lname, nickname, email, tel FROM employee WHERE employee_id = "{id}"'
+        print(sql)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        print(result)
 
     if not result:
         return jsonify({'success': False}), 401
@@ -110,15 +116,15 @@ def employee():
         return jsonify(result)
 
 
-@app.route("/employee/uploadFile", methods=['POST'])
+@ app.route("/employee/uploadFile", methods=['POST'])
 def employee_upload_file():
     data = request.json.get('fileText')
-    cursor = connection.cursor()
-    cursor.execute(data)
+    sql = f'{data}'
+    cursor.execute(sql)
     connection.commit()
     return jsonify({'success': True})
 
 
 if __name__ == "__main__":
-    app.run(host='localhost', port=3000, debug=True)
+    app.run(host='localhost', port=3000)
     print("Server started on http://localhost:3000")
