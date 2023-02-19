@@ -1,0 +1,41 @@
+version: "3"
+services:
+  app:
+    container_name: flask-app
+    build: ./app
+    links:
+      - db
+    ports:
+      - "3000:5000"
+    networks:
+      - injecter
+    
+  db:
+    container_name: mysql-db
+    image: mysql:5.7
+    restart: 'always'
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: mockInjection
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/:ro
+    networks:
+      - injecter
+  phpmyadmin:
+    image: phpmyadmin:5.2-apache
+    container_name: phpmyadmin
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "800:80"
+    networks:
+      - injecter
+
+networks:
+  injecter:
+    driver: bridge
