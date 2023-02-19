@@ -1,15 +1,4 @@
-const dataSet = [
-  'lnwza007 " OR x=x-- ',
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  'eiei123 " ORDER BY 20-- ',
-  "asdasd \" AND 1=0 AND '%'='",
-  'lnwza007 " WHERE 1=1 AND 1=0--',
-];
+const dataSet = ['"; SELECT * FROM customer-- '];
 
 async function fetchData(data) {
   try {

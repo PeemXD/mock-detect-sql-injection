@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Service Table</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td,
+      th {
+        border: 2px solid #ccc;
+        text-align: left;
+        padding: 8px;
+      }
+      form {
+        display: flex;
+        align-items: center;
+      }
+
+      input[type="text"] {
+        width: 90%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button[type="submit"] {
+        width: 10%;
+        padding: 12px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: 2px solid #4caf50;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button[type="submit"]:hover {
+        background-color: #45a049;
+      }
+
+      .upload-form {
+        width: 400px;
+        margin: 50px auto;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 2px 2px 10px #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="upload-form">
+      <form>
+        <input type="file" id="myFile" name="filename" />
+        <input type="submit" id="submitFile" />
+      </form>
+    </div>
+
+    <form onsubmit="getSpecificService()">
+      <input type="text" id="searchInput" placeholder="Search..." />
+      <!-- <input type="text" id="searchInput" placeholder="Search..." pattern="[ก-๏a-zA-Z\d0-9]+">  -->
+      <button type="submit">Search</button>
+    </form>
+    <table id="servicesTable">
+      <thead></thead>
+        <tr>
+          <th>employee_id</th>
+          <th>prefixname</th>
+          <th>fname</th>
+          <th>lname</th>
+          <th>nickname</th>
+          <th>email</th>
+          <th>tel</th>
+        </tr>
+      </thead>
+    </table>
+    <script type="text/javascript" charset="utf-8">
+      renderAllData()
+      function renderAllData() {
+        fetch("http://localhost:3000/employee")
+        .then((response) => response.json())
+        .then(function (apiJsonData) {
+          // console.log(apiJsonData);
+          renderDataInTheTable(apiJsonData);
+        });
+      }
+
+      <!-- A function that takes in an array of objects and renders them in a table. -->
+      function renderDataInTheTable(todos) {
+        const mytable = document.getElementById("servicesTable");
+        todos.forEach((todo) => {
+          let newRow = document.createElement("tr");
+          Object.values(todo).forEach((value) => {
+            let cell = document.createElement("td");
+            cell.innerText = value;
+            newRow.appendChild(cell);
+          });
+          mytable.appendChild(newRow);
+        });
+      }
+
+      function getSpecificService() {
+        event.preventDefault(); // prevent form submission
+        var searchInput = document.getElementById("searchInput").value;
+        //call API with the search input
+        //example:
+        fetch("http://localhost:3000/employee?id=" + searchInput, {
+          method: "GET",
+          mode: "cors",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((response) => response.json())
+          .then((apiJsonData) => {
+            console.log(apiJsonData);
+            deleteAllTableData();
+            renderDataInTheTable(apiJsonData);
+          });
+      }
+
+      function deleteAllTableData() {
+        var table = document.getElementById("servicesTable");
+        var rowCount = table.rows.length;
+        for (var i = 0; i < rowCount; i++) {
+          table.deleteRow(0);
+        }
+      }
+
+      async function uploadFile(fileText) {
+        fetch("http://localhost:3000/employee/uploadFile", {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            fileText: fileText
+          })
+        })
+          .then((response) => response.json())
+          .then(apiJsonData => {
+            if (apiJsonData.success) {
+              alert("success")
+            }else {
+              alert("You don't have the authority to execute that command.")
+            }
+          })
+      }
+
+      document.getElementById("submitFile").addEventListener("click", function() {
+        const fileInput = document.getElementById("myFile");
+        const file = fileInput.files[0];
+        
+        const reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = async function() {
+          const fileText = reader.result;
+          await uploadFile(fileText)
+        };
+      });
+    </script>
+  </body>
+</html>
