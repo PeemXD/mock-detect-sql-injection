@@ -3,6 +3,10 @@ import joblib
 import mysql.connector
 from flask_cors import CORS
 import re
+import threading
+
+mutex = threading.Lock()
+count = 0
 
 app = Flask(__name__)
 CORS(app)
@@ -112,42 +116,59 @@ def login():
     data = request.json.get('data')
     username = data.get('username')
     password = data.get('password')
-    # print(data)
-    # print(username, password)
-    # if (haveBlackListWordInFile(username) or haveBlackListWordInFile(password)):
-    #     return jsonify({'success': "This injection"})
-    outPut1 = vectorizer(username)
-    outPut2 = randomForest(outPut1)
-    # print(outPut2)
-    # return jsonify({'success': outPut2})
-    if outPut2:
+
+    if (haveBlackListWordInFile(username) or haveBlackListWordInFile(password)):
+        mutex.acquire()
+        count += 1
+        mutex.release()
         return jsonify({'success': "This injection"})
-
-    sql = f'SELECT * FROM users WHERE username = "{username}" AND password = "{password}"'
-    print(sql)
-    cursor.execute(sql)
-    result = cursor.fetchall()
-
-    if not result:
-        return jsonify({'success': False})
     else:
-        return jsonify({'success': True})
+        return jsonify({'success': "This is not injection"})
+
+    # outPut1 = vectorizer(username)
+    # outPut2 = randomForest(outPut1)
+    # if outPut2:
+    #     mutex.acquire()
+    #     count += 1
+    #     mutex.release()
+    #     return jsonify({'success': "This injection"})
+    # else:
+    #     return jsonify({'success': "This is not injection"})
+
+    # sql = f'SELECT * FROM users WHERE username = "{username}" AND password = "{password}"'
+    # print(sql)
+    # cursor.execute(sql)
+    # result = cursor.fetchall()
+
+    # if not result:
+    #     return jsonify({'success': False})
+    # else:
+    #     return jsonify({'success': True})
 
 
 @ app.route("/employee", methods=['GET'])
 def employee():
     id = request.args.get('id')
+    # print(id)
 
-    # if (haveBlackListWordInFile(id)):
-    #     return jsonify({'success': "This injection"})
-    outPut1 = vectorizer(id)
-    outPut2 = randomForest(outPut1)
-    # print(outPut2)
-    # return jsonify({'success': outPut2})
-    if outPut2:
+    if (haveBlackListWordInFile(id)):
+        # mutex.acquire()
+        global count
+        count += 1
+        # mutex.release()
         return jsonify({'success': "This injection"})
     else:
         return jsonify({'success': "This is not injection"})
+    # outPut1 = vectorizer(id)
+    # outPut2 = randomForest(outPut1)
+    # if outPut2:
+    #     global count
+    #     mutex.acquire()
+    #     count += 1
+    #     mutex.release()
+    #     return jsonify({'success': "This injection"})
+    # else:
+    #     return jsonify({'success': "This is not injection"})
 
     # if not id:
     #     sql = f'SELECT employee_id, prefixname, fname, lname, nickname, email, tel FROM employee'
@@ -178,6 +199,11 @@ def employee_upload_file():
     cursor.execute(sql)
     connection.commit()
     return jsonify({'success': True})
+
+
+@ app.route("/count", methods=['GET'])
+def getCount():
+    return jsonify({'success': True, 'count': count})
 
 
 if __name__ == "__main__":

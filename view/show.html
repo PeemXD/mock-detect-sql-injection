@@ -81,7 +81,11 @@
     <script type="text/javascript" charset="utf-8">
       renderAllData()
       function renderAllData() {
-        fetch("http://localhost:3000/employee")
+        fetch("http://localhost:3000/employee?id=", {
+          method: "GET",
+          mode: "cors",
+          headers: { "Content-Type": "application/json" },
+        })
         .then((response) => response.json())
         .then(function (apiJsonData) {
           // console.log(apiJsonData);
