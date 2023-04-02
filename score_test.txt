@@ -1,0 +1,120 @@
+Select
+{
+  NaiveBay: 8,
+  NaiveBay_smote: 67,
+  RuleBase: 67,
+  knn: 53,
+  knn_smote: 45,
+  randomforest: 64,
+  randomforest_smote: 47,
+  total: 67
+}
+
+Insert
+{
+  NaiveBay: 50,
+  NaiveBay_smote: 200,
+  RuleBase: 200,
+  knn: 22,
+  knn_smote: 200,
+  randomforest: 22,
+  randomforest_smote: 183,
+  total: 200
+}
+
+Update
+{
+  NaiveBay: 64,
+  NaiveBay_smote: 200,
+  RuleBase: 200,
+  knn: 64,
+  knn_smote: 197,
+  randomforest: 0,
+  randomforest_smote: 196,
+  total: 200
+}
+
+Delete
+{
+  NaiveBay: 56,
+  NaiveBay_smote: 200,
+  RuleBase: 200,
+  knn: 52,
+  knn_smote: 200,
+  randomforest: 56,
+  randomforest_smote: 167,
+  total: 200
+}
+
+Show
+{
+  NaiveBay: 9,
+  NaiveBay_smote: 3,
+  RuleBase: 9,
+  knn: 6,
+  knn_smote: 0,
+  randomforest: 0,
+  randomforest_smote: 0,
+  total: 9
+}
+
+
+Wait
+{
+  NaiveBay: 24,
+  NaiveBay_smote: 37,
+  RuleBase: 40,
+  knn: 40,
+  knn_smote: 0,
+  randomforest: 40,
+  randomforest_smote: 0,
+  total: 40
+}
+
+Union Wait
+{
+  NaiveBay: 108,
+  NaiveBay_smote: 192,
+  RuleBase: 192,
+  knn: 192,
+  knn_smote: 0,
+  randomforest: 179,
+  randomforest_smote: 0,
+  total: 192
+}
+
+Union
+{
+  NaiveBay: 6,
+  NaiveBay_smote: 92,
+  RuleBase: 92,
+  knn: 92,
+  knn_smote: 77,
+  randomforest: 89,
+  randomforest_smote: 88,
+  total: 92
+}
+
+Union Blind
+{
+  NaiveBay: 3,
+  NaiveBay_smote: 47,
+  RuleBase: 47,
+  knn: 47,
+  knn_smote: 47,
+  randomforest: 47,
+  randomforest_smote: 47,
+  total: 47
+}
+
+final
+{
+  NaiveBay: ' 0.3005',
+  NaiveBay_smote: ' 0.9913',
+  RuleBase: ' 1.0000',
+  knn: ' 0.5275',
+  knn_smote: ' 0.6879',
+  randomforest: ' 0.4531',
+  randomforest_smote: ' 0.6464',
+  total: 1035
+}
